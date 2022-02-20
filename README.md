@@ -22,7 +22,6 @@ On my local machine
 mocha
 No
 Enter
-Enter
 n
 spec
 wait-for
