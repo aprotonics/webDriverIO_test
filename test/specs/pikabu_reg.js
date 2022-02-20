@@ -21,7 +21,7 @@ describe('Registration Test', () => {
     let secondPasswordCheckSelector = 'div.requirements-hint__rules > div:nth-child(2) svg.icon--auth__success'
     let thirdPasswordCheckSelector = 'div.requirements-hint__rules > div:last-child svg.icon--auth__success'
     
-    it.skip('positive reg', async () => {
+    it('positive reg', async () => {
         await browser.url(`https://pikabu.ru/`);
 
         await $(toSignupFormButtonSelector).click();
@@ -34,7 +34,7 @@ describe('Registration Test', () => {
         await expect($(accountConfirmTextSelector)).toHaveTextContaining('Подтвердить аккаунт');
     });
 
-    it.skip('neg reg - wrong email', async () => {
+    it('neg reg - wrong email', async () => {
         await browser.reloadSession()
         await browser.url(`https://pikabu.ru/`);
 
@@ -48,7 +48,7 @@ describe('Registration Test', () => {
         await expect($(PopupHintSelector)).toHaveTextContaining('Неверный email');
     });
 
-    it.skip('neg reg - without login', async () => {
+    it('neg reg - without login', async () => {
         await browser.reloadSession()
         await browser.url(`https://pikabu.ru/`);
 
@@ -62,7 +62,7 @@ describe('Registration Test', () => {
         await expect($(PopupHintSelector)).toHaveTextContaining('Обязательное поле');
     });
 
-    it.skip('neg reg - same email', async () => {
+    it('neg reg - same email', async () => {
         await browser.reloadSession()
         await browser.url(`https://pikabu.ru/`);
 
