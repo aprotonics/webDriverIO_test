@@ -21,7 +21,7 @@ describe('Registration Test', () => {
     let secondPasswordCheckSelector = 'div.requirements-hint__rules > div:nth-child(2) svg.icon--auth__success'
     let thirdPasswordCheckSelector = 'div.requirements-hint__rules > div:last-child svg.icon--auth__success'
     
-    it('positive reg', async () => {
+    it.skip('positive reg', async () => {
         await browser.url(`https://pikabu.ru/`);
 
         await $(toSignupFormButtonSelector).click();
@@ -34,7 +34,7 @@ describe('Registration Test', () => {
         await expect($(accountConfirmTextSelector)).toHaveTextContaining('Подтвердить аккаунт');
     });
 
-    it('neg reg - wrong email', async () => {
+    it.skip('neg reg - wrong email', async () => {
         await browser.reloadSession()
         await browser.url(`https://pikabu.ru/`);
 
@@ -48,7 +48,7 @@ describe('Registration Test', () => {
         await expect($(PopupHintSelector)).toHaveTextContaining('Неверный email');
     });
 
-    it('neg reg - without login', async () => {
+    it.skip('neg reg - without login', async () => {
         await browser.reloadSession()
         await browser.url(`https://pikabu.ru/`);
 
@@ -62,7 +62,7 @@ describe('Registration Test', () => {
         await expect($(PopupHintSelector)).toHaveTextContaining('Обязательное поле');
     });
 
-    it('neg reg - same email', async () => {
+    it.skip('neg reg - same email', async () => {
         await browser.reloadSession()
         await browser.url(`https://pikabu.ru/`);
 
@@ -91,9 +91,9 @@ describe('Registration Test', () => {
         await $(passwordFieldSelector).setValue(first_password);
         await $(loginFieldSelector).click()
 
-        await expect($(firstPasswordCheckSelector)).toBeExisting();
-        await expect($(secondPasswordCheckSelector)).toBeExisting();
-        await expect($(thirdPasswordCheckSelector)).toBeExisting();
+        await expect($(firstPasswordCrossSelector)).toBeExisting();
+        await expect($(secondPasswordCrossSelector)).toBeExisting();
+        await expect($(thirdPasswordCrossSelector)).toBeExisting();
         await expect($(firstPasswordCrossSelector))
         .toHaveElementClassContaining('icon--auth__error');
         await expect($(secondPasswordCrossSelector))
@@ -105,14 +105,14 @@ describe('Registration Test', () => {
         await $(passwordFieldSelector).setValue(second_password);
         await $(loginFieldSelector).click()
 
-        await expect($(firstPasswordCheckSelector)).toBeExisting();
+        await expect($(firstPasswordCrossSelector)).toBeExisting();
         await expect($(secondPasswordCheckSelector)).toBeExisting();
-        await expect($(thirdPasswordCheckSelector)).toBeExisting();
+        await expect($(firstPasswordCrossSelector)).toBeExisting();
         await expect($(firstPasswordCrossSelector))
         .toHaveElementClassContaining('icon--auth__error');
         await expect($(secondPasswordCheckSelector))
         .toHaveElementClassContaining('icon--auth__success');
-        await expect($(thirdPasswordCrossSelector))
+        await expect($(firstPasswordCrossSelector))
         .toHaveElementClassContaining('icon--auth__error');
 
         await $(passwordFieldSelector).clearValue();
