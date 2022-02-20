@@ -91,9 +91,9 @@ describe('Registration Test', () => {
         await $(passwordFieldSelector).setValue(first_password);
         await $(loginFieldSelector).click()
 
-        await expect($()).toBeExisting(firstPasswordCrossSelector);
-        await expect($()).toBeExisting(secondPasswordCrossSelector);
-        await expect($()).toBeExisting(thirdPasswordCrossSelector);
+        await expect($(firstPasswordCheckSelector)).toBeExisting();
+        await expect($(secondPasswordCheckSelector)).toBeExisting();
+        await expect($(thirdPasswordCheckSelector)).toBeExisting();
         await expect($(firstPasswordCrossSelector))
         .toHaveElementClassContaining('icon--auth__error');
         await expect($(secondPasswordCrossSelector))
@@ -105,9 +105,9 @@ describe('Registration Test', () => {
         await $(passwordFieldSelector).setValue(second_password);
         await $(loginFieldSelector).click()
 
-        await expect($()).toBeExisting(firstPasswordCrossSelector);
-        await expect($()).toBeExisting(secondPasswordCheckSelector);
-        await expect($()).toBeExisting(thirdPasswordCrossSelector);
+        await expect($(firstPasswordCheckSelector)).toBeExisting();
+        await expect($(secondPasswordCheckSelector)).toBeExisting();
+        await expect($(thirdPasswordCheckSelector)).toBeExisting();
         await expect($(firstPasswordCrossSelector))
         .toHaveElementClassContaining('icon--auth__error');
         await expect($(secondPasswordCheckSelector))
