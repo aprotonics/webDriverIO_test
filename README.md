@@ -44,6 +44,9 @@ capabilities: [{
         'goog:chromeOptions': {
             args: ['--remote-debugging-port=9222'],
         },
+        
+        ...
+}]        
 ```
 
 ```
