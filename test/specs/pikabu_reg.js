@@ -1,4 +1,6 @@
 describe('Registration Test', () => {
+    let URL = 'https://pikabu.ru/'
+    
     let number = Math.floor(Math.random() * (1000000000 - 10000000) + 10000000)
     let correct_email = `test${number}@mail.ru`
     let incorrect_email = `test${number}`
@@ -14,15 +16,41 @@ describe('Registration Test', () => {
     let PopupHintSelector = 'div.popup__hint'
     let errorSpanSelector = '[data-id="signup"] span.auth__error'
 
-    let firstPasswordCrossSelector = 'div.requirements-hint__rules > div:first-child svg.icon--auth__error'
-    let secondPasswordCrossSelector = 'div.requirements-hint__rules > div:nth-child(2) svg.icon--auth__error'
-    let thirdPasswordCrossSelector = 'div.requirements-hint__rules > div:last-child svg.icon--auth__error'
-    let firstPasswordCheckSelector = 'div.requirements-hint__rules > div:first-child svg.icon--auth__success'
-    let secondPasswordCheckSelector = 'div.requirements-hint__rules > div:nth-child(2) svg.icon--auth__success'
-    let thirdPasswordCheckSelector = 'div.requirements-hint__rules > div:last-child svg.icon--auth__success'
+    let firstPasswordSuccessSelector = 'div.requirements-hint__rules > div:first-child svg.icon--auth__success'
+    let secondPasswordSuccessSelector = 'div.requirements-hint__rules > div:nth-child(2) svg.icon--auth__success'
+    let thirdPasswordSuccessSelector = 'div.requirements-hint__rules > div:last-child svg.icon--auth__success'
+    let firstPasswordErrorSelector = 'div.requirements-hint__rules > div:first-child svg.icon--auth__error'
+    let secondPasswordErrorSelector = 'div.requirements-hint__rules > div:nth-child(2) svg.icon--auth__error'
+    let thirdPasswordErrorSelector = 'div.requirements-hint__rules > div:last-child svg.icon--auth__error'
+    let passwordSuccessSelectors = [firstPasswordSuccessSelector, secondPasswordSuccessSelector, thirdPasswordSuccessSelector]
+    let passwordErrorSelectors = [firstPasswordErrorSelector, secondPasswordErrorSelector, thirdPasswordErrorSelector]
     
+    async function chechPassword(password, firstPassIcon, secondPassIcon, thirdPassIcon) {
+        await $(passwordFieldSelector).setValue(password);
+        await $(loginFieldSelector).click()
+        
+        let passIconSelectors = []
+        let passIcons = [firstPassIcon, secondPassIcon, thirdPassIcon]
+        passIcons.forEach((passIcon, index) => {
+            let passwordIconSelector
+            if (passIcon === 'success') {
+                passwordIconSelector = passwordSuccessSelectors[index]
+                
+            } else if (passIcon === 'error') {
+                passwordIconSelector = passwordErrorSelectors[index]
+            }
+            passIconSelectors.push(passwordIconSelector)
+        })
+
+        for (let i = 0; i < passIconSelectors.length; i++) {
+            await expect($(passIconSelectors[i])).toBeExisting()
+            await expect($(passIconSelectors[i]))
+            .toHaveElementClassContaining(`icon--auth__${passIcons[i]}`);
+        }
+    }
+
     it('positive reg', async () => {
-        await browser.url(`https://pikabu.ru/`);
+        await browser.url(URL);
 
         await $(toSignupFormButtonSelector).click();
         await $(emailFieldSelector).setValue(correct_email);
@@ -36,7 +64,7 @@ describe('Registration Test', () => {
 
     it('neg reg - wrong email', async () => {
         await browser.reloadSession()
-        await browser.url(`https://pikabu.ru/`);
+        await browser.url(URL);
 
         await $(toSignupFormButtonSelector).click();
         await $(emailFieldSelector).setValue(incorrect_email);
@@ -50,7 +78,7 @@ describe('Registration Test', () => {
 
     it('neg reg - without login', async () => {
         await browser.reloadSession()
-        await browser.url(`https://pikabu.ru/`);
+        await browser.url(URL);
 
         await $(toSignupFormButtonSelector).click();
         await $(emailFieldSelector).setValue(correct_email);
@@ -64,7 +92,7 @@ describe('Registration Test', () => {
 
     it('neg reg - same email', async () => {
         await browser.reloadSession()
-        await browser.url(`https://pikabu.ru/`);
+        await browser.url(URL);
 
         await $(toSignupFormButtonSelector).click();
         await $(emailFieldSelector).setValue(correct_email);
@@ -76,7 +104,7 @@ describe('Registration Test', () => {
         await expect($(errorSpanSelector)).toHaveTextContaining('Email используется');
     });
 
-    it('check password', async () => {
+    it('check password', async () => {        
         let first_password = ''
         let second_password = 'q'
         let third_password = '1'
@@ -84,77 +112,14 @@ describe('Registration Test', () => {
         let fifth_password = '1q2w3e4r5t6y'
         
         await browser.reloadSession()
-        await browser.url(`https://pikabu.ru/`);
+        await browser.url(URL);
 
         await $(toSignupFormButtonSelector).click();
 
-        await $(passwordFieldSelector).setValue(first_password);
-        await $(loginFieldSelector).click()
-
-        await expect($(firstPasswordCrossSelector)).toBeExisting();
-        await expect($(secondPasswordCrossSelector)).toBeExisting();
-        await expect($(thirdPasswordCrossSelector)).toBeExisting();
-        await expect($(firstPasswordCrossSelector))
-        .toHaveElementClassContaining('icon--auth__error');
-        await expect($(secondPasswordCrossSelector))
-        .toHaveElementClassContaining('icon--auth__error');
-        await expect($(thirdPasswordCrossSelector))
-        .toHaveElementClassContaining('icon--auth__error');
-
-        await $(passwordFieldSelector).clearValue();
-        await $(passwordFieldSelector).setValue(second_password);
-        await $(loginFieldSelector).click()
-
-        await expect($(firstPasswordCrossSelector)).toBeExisting();
-        await expect($(secondPasswordCheckSelector)).toBeExisting();
-        await expect($(firstPasswordCrossSelector)).toBeExisting();
-        await expect($(firstPasswordCrossSelector))
-        .toHaveElementClassContaining('icon--auth__error');
-        await expect($(secondPasswordCheckSelector))
-        .toHaveElementClassContaining('icon--auth__success');
-        await expect($(firstPasswordCrossSelector))
-        .toHaveElementClassContaining('icon--auth__error');
-
-        await $(passwordFieldSelector).clearValue();
-        await $(passwordFieldSelector).setValue(third_password);
-        await $(loginFieldSelector).click()
-
-        await expect($(firstPasswordCrossSelector)).toBeExisting();
-        await expect($(secondPasswordCrossSelector)).toBeExisting();
-        await expect($(thirdPasswordCheckSelector)).toBeExisting();
-        await expect($(firstPasswordCrossSelector))
-        .toHaveElementClassContaining('icon--auth__error');
-        await expect($(secondPasswordCrossSelector))
-        .toHaveElementClassContaining('icon--auth__error');
-        await expect($(thirdPasswordCheckSelector))
-        .toHaveElementClassContaining('icon--auth__success');
-
-        await $(passwordFieldSelector).clearValue();
-        await $(passwordFieldSelector).setValue(fourth_password);
-        await $(loginFieldSelector).click()
-
-        await expect($(firstPasswordCheckSelector)).toBeExisting();
-        await expect($(secondPasswordCrossSelector)).toBeExisting();
-        await expect($(thirdPasswordCheckSelector)).toBeExisting();
-        await expect($(firstPasswordCheckSelector))
-        .toHaveElementClassContaining('icon--auth__success');
-        await expect($(secondPasswordCrossSelector))
-        .toHaveElementClassContaining('icon--auth__error');
-        await expect($(thirdPasswordCheckSelector))
-        .toHaveElementClassContaining('icon--auth__success');
-
-        await $(passwordFieldSelector).clearValue();
-        await $(passwordFieldSelector).setValue(fifth_password);
-        await $(loginFieldSelector).click()
-
-        await expect($(firstPasswordCheckSelector)).toBeExisting();
-        await expect($(secondPasswordCheckSelector)).toBeExisting();
-        await expect($(thirdPasswordCheckSelector)).toBeExisting();
-        await expect($(firstPasswordCheckSelector))
-        .toHaveElementClassContaining('icon--auth__success');
-        await expect($(secondPasswordCheckSelector))
-        .toHaveElementClassContaining('icon--auth__success');
-        await expect($(thirdPasswordCheckSelector))
-        .toHaveElementClassContaining('icon--auth__success');
+        chechPassword(first_password, 'error', 'error', 'error')
+        chechPassword(second_password, 'error', 'success', 'error') 
+        chechPassword(third_password, 'error', 'error', 'success') 
+        chechPassword(fourth_password, 'success', 'error', 'success') 
+        chechPassword(fifth_password, 'success', 'success', 'success')  
     });
 });

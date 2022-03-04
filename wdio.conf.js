@@ -21,11 +21,11 @@ exports.config = {
     // will be called from there.
     //
     specs: [
-        './test/specs/*.js'
+        './test/specs/**/*.js'
     ],
     // Patterns to exclude.
     exclude: [
-        // './test/specs/examples'
+        // 'path/to/excluded/files'
     ],
     //
     // ============
@@ -59,13 +59,11 @@ exports.config = {
         browserName: 'chrome',
         
         'goog:chromeOptions': {
-            args: ['--remote-debugging-port=9222'],
+            args: ['start-maximized',
+            'start-in-incognito',
+            '--remote-debugging-port=9222'],
         },
         
-        // 'goog:chromeOptions': {
-        //     args: [ 'headless', 'disable-gpu'],
-        // },
-
         acceptInsecureCerts: true
         // If outputDir is provided WebdriverIO can capture driver session logs
         // it is possible to configure which logTypes to include/exclude.
@@ -106,7 +104,7 @@ exports.config = {
     baseUrl: 'http://localhost',
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 10000,
+    waitforTimeout: 15000,
     //
     // Default timeout in milliseconds for request
     // if browser driver or grid doesn't send response
